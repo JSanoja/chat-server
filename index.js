@@ -61,7 +61,7 @@ io.on('connection', socket => {
       console.log('El cliente de id '+ socket.id + ' se desunio al room '+ sub.event)    
   });
 });
-
+ 
 // se levanta el servidor
 server.listen(3000, function(){
   console.log('listening on *:3000');
