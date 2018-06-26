@@ -13,17 +13,16 @@ Mensajeria entre aplicaciones con node.js y Socket.io
 
 ``` javascript
 
-socket = io('http://localhost:3000',{
+socket = io('URL_NODE',{
       query: {
-        usuario: 'Juan Sanoja',
-        desde: 'Emisor de Eventos',
-        sub : ['Evento A']
-      }
+        sub : ['NOMBRE EVENTO'}
     });
 
-this.socket.emit('EMIT', {event: 'Evento A',data:'Evento A'}, (data) => {
-      
-    })
+this.socket.emit('EMIT', {event: 'NOMBRE EVENTO',data:{}})
+
+this.socket.emit('SUB', {event:"NOMBRE EVENTO"});
+this.socket.emit('UNSUB', {event:"NOMBRE EVENTO"});
+
 ```
 
 
