@@ -1,0 +1,30 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TdEvent</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="libs-event.js"></script>
+</head>
+<body>    
+    <div id="div-users"></div>
+    <div id="div-chat"></div>
+    <script>
+        const tdChat = {
+            idCMSPortal: "161", //Canal de comunicacion
+            portal: "Ultima Hora",
+            idCMSUsuario: "165546", //id Unico del usuario
+            user: "Juan Sanoja",          //Juan
+            userPicture: "https://media.metrolatam.com/2018/07/22/capturadepantalla20180722alas84422am-2d76d128e220130daee58ed0b6e4ada5-1200x800.jpg",
+            divUser: "div-users",
+            divContainer: "div-chat"
+        };
+    </script>    
+</body>
+</html>

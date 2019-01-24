@@ -15,9 +15,10 @@ io.attach(server, {
 
 // intermedio para validar dominios
 io.use((socket, next) => {    
-  let clientURL = socket.handshake.headers.origin;
+  let clientURL = socket.handshake.headers.origin;  
+  console.log(JSON.stringify(socket.handshake.query.query))
   if (whiteList.indexOf(clientURL)>-1) {
-    console.log('Coneccion del dominio permitido '+clientURL)
+    console.log('Coneccion del dominio permitido '+clientURL,'de', socket.handshake.query.user)
     return next(); 
   } else {
     console.log('Coneccion rechazada del dominio '+clientURL)
@@ -26,26 +27,58 @@ io.use((socket, next) => {
 
 // Luego de aceptar el dominio conecto
 io.on('connection', socket => {
-  // Usiario conectado
-  let socketEvents = socket.handshake.query.sub ? socket.handshake.query.sub.split(',') : [];
-
-  // Unirse a los room que el usuario tiene suscrito por default
-  socketEvents.forEach(socketEvent=> {
-    socket.join(socketEvent);
-    console.log();
-    console.log(socket.id + ' Se unio al Room '+ socketEvent);
-  });
-
-  // acciones para el usuario desconectado
-  socket.on('disconnect', () =>{
-    console.log();
-    console.log(socket.id + ' se desconecto y salio de los room');  
+  // Usuario conectado
+  let room = socket.handshake.query.idCMSPortal;    
+  socket.join(room);  
+  let key = socket.id;
+  let user= socket.handshake.query.user;
+  console.log(user + ' Se unio al Room '+ room);
+  io.to(room).emit('CONECT', socket.handshake.query); 
+  // Acciones para el usuario desconectado
+  socket.on('disconnect', () =>{    
+    // let key = socket.id;
+    // let user= socket.handshake.query.user;
+    // let room= socket.handshake.query.idCMSPortal;
+    console.log(user + ' Salio del Room ', room);
+    io.to(room).emit('DISCONECT', socket.handshake.query);        
   });
 
   // emitir al room el evento 
   socket.on('EMIT', (data) => {    
+    console.log(data)
     io.to(data.event).emit(data.event, data.data);        
   });
+
+  socket.on('GETUSERS', (data, fn) => {        
+    // fn(test);
+    io.in(data.room).clients((error, clients) => {
+      if (error) throw error;
+      let clientsArray = []
+      clients.forEach(client => {
+        clientsArray.push(io.in(data.room).connected[client].handshake.query);
+      })
+      
+      fn({
+        clients: clientsArray
+      })
+    });
+  })
+  socket.on('PING', (data, fn) => {
+    io.in(data.room).clients((error, clients) => {
+      if (error) throw error;       
+      clients.forEach(client => {                
+        const clientQuery = io.in(data.room).connected[client].handshake.query;        
+        const isClient = clientQuery.idCMSUsuario.indexOf(data.to);        
+        
+        if (isClient != -1) {          
+          console.log(io.in(data.room).connected[client])
+          console.log(data.to, clientQuery.idCMSUsuario, isClient, client)
+          
+          io.to(client).emit('PING', {data: "Pin enviado por " + data.from + " para " + data.to}); 
+        }
+      })
+    });
+  })
 
   // Se unio al room
   socket.on('SUB', sub => {   
