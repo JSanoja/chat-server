@@ -3,8 +3,10 @@ class TdEvent {
     constructor(socket, tdChat) { }
     init(domainServer, tdChatConst) {
         this.tdChat = tdChatConst;
-        this.config(domainServer, this.tdChat);
+        console.log()
+        this.config(domainServer+this.tdChat.idCMSPortal, this.tdChat);
         this.addStyles(this.tdChat);
+        this.showUser(this.tdChat);
         this.getUsers(this.tdChat).then(users => {
             this.buildUsers(users)
             this.subscribeConect();
@@ -14,6 +16,7 @@ class TdEvent {
 
     }
     config(domain, object) {
+        console.log(domain)
         this.socket = io(domain, {
             query: object
         })
@@ -72,6 +75,9 @@ class TdEvent {
             })
             console.log('Se construyo', client.user)
         }
+    }
+    showUser(client) {
+        jQuery('body').prepend(client.user)
     }
     removeUser(client) {
         if (jQuery(`#user-${client.idCMSUsuario}`).length != 0) {
