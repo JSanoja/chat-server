@@ -63,6 +63,7 @@ io.use((socket, next) => {
       });
     })
     socket.on('PING', (data, fn) => {
+      console.log('PING')
       io.of('/161').clients((error, clients) => {
         if (error) throw error;       
         clients.forEach(client => {                
@@ -70,13 +71,30 @@ io.use((socket, next) => {
           const isClient = clientQuery.idCMSUsuario.indexOf(data.to);                  
           if (isClient != -1) {          
             // console.log(io.in(data.room).connected[client])
-            // console.log(data.to, clientQuery.idCMSUsuario, isClient, client)          
+            // console.log(data.to, clientQuery.idCMSUsuario, isClient, client)                      
             io.of('/161').to(client).emit('PING', {data: "Pin enviado por " + data.from + " para " + data.to}); 
           }
         })
       });
     })
-
+    socket.on('CHAT', (data, fn) => {
+      console.log('CHAT')
+      io.of('/161').clients((error, clients) => {
+        if (error) throw error;       
+        clients.forEach(client => {                
+          const clientQuery = io.of('/161').connected[client].handshake.query;        
+          const isClient = clientQuery.idCMSUsuario.indexOf(data.to);                  
+          if (isClient != -1) {
+            // console.log(data, clientQuery.idCMSUsuario, isClient, client)                      
+            io.of('/161').to(client).emit('CHAT', {
+              to: data.to,
+              from: data.from,
+              message: data.message
+            }); 
+          }
+        })
+      });
+    })
     // Se unio al room
     socket.on('SUB', sub => {   
         socket.join(sub.event);

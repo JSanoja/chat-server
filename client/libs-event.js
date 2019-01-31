@@ -1,8 +1,12 @@
-
 class TdEvent {
-    constructor(socket, tdChat) { }
-    init(domainServer, tdChatConst) {
+    constructor(socket, tdChat) { 
+        this.closeIcon = `<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512" class="svg-inline--fa fa-times fa-w-11 fa-3x"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z" class=""></path></svg>`;
+        this.sendIcon = `<svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="telegram" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="svg-inline--fa fa-telegram fa-w-16 fa-3x"><path fill="currentColor" d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z" class=""></path></svg>`;
+    }
+    
+    init(domainServer, tdChatConst) {        
         this.tdChat = tdChatConst;
+        this.buildMain()
         console.log()
         this.config(domainServer+this.tdChat.idCMSPortal, this.tdChat);
         this.addStyles(this.tdChat);
@@ -12,8 +16,15 @@ class TdEvent {
             this.subscribeConect();
             this.subscribeDisconect();
             this.subscribePing();
+            this.subscribeChat();
         });
 
+    }
+    buildMain() {
+        jQuery('body').append(`
+            <div id="${this.tdChat.divUser}"></div>
+            <div id="${this.tdChat.divChat}"></div>
+        `)
     }
     config(domain, object) {
         console.log(domain)
@@ -34,7 +45,15 @@ class TdEvent {
         this.socket.emit('EMIT', { event: event, data: data })
     }
     emitPing(from, to) {
-        this.socket.emit('PING', { from: from, to: to, room: this.tdChat.idCMSPortal })
+        this.socket.emit('PING', { from: from, to: to, nameSpace: this.tdChat.idCMSPortal })
+    }
+    emitChat(from, to, message) {
+        this.socket.emit('CHAT', {   
+            from: from,         
+            to: to, 
+            nameSpace: this.tdChat.idCMSPortal,
+            message: message
+        })
     }
     addStyles(data) {
         jQuery.getScript("tdchat.css.js")
@@ -52,8 +71,10 @@ class TdEvent {
             );
         })
     }
-    clickUser (from, to) {
+    clickUser (from, to, user) {
         this.emitPing(from,to);
+        console.log(from, to, user);
+        this.buildChat(from, to, user);
     }
     buildUsers(data) {
         data.forEach((client, index) => {
@@ -71,9 +92,34 @@ class TdEvent {
                 </figure>
             `);
             jQuery(`#user-${client.idCMSUsuario}`).click(()=> {
-                this.clickUser(this.tdChat.idCMSUsuario, client.idCMSUsuario);
+                this.clickUser(this.tdChat.idCMSUsuario, client.idCMSUsuario, client.user);
             })
             console.log('Se construyo', client.user)
+        }
+    }
+    buildChat(from, to, user) {
+        
+        if (jQuery(`#td-chat-${to}`).length == 0) {
+            console.log(jQuery(`#td-chat-${to}`).length)
+            jQuery(`#${this.tdChat.divChat}`).append(`
+                <div class="td-chat-to" id="td-chat-${to}" data-to="${to}">
+                    <div class="td-chat-header">
+                        <div class="td-chat-close">${this.closeIcon}</div>
+                        <h2>${user}</h2>
+                    </div>
+                    <div class="td-chat-area"></div>
+                    <input class="td-chat-input" type="text" placeholder="Escribir" value=""/>
+                    <a class="td-chat-send">${this.sendIcon}</a>                    
+                </div>
+            `);
+            jQuery(`#td-chat-${to} .td-chat-send`).click(()=> {
+                let message = jQuery(`#td-chat-${to} .td-chat-input`).val();
+                this.emitChat(from, to, message);
+                jQuery(`#td-chat-${to} .td-chat-input`);
+            })
+            jQuery(`#td-chat-${to} .td-chat-close`).click(()=> {
+                jQuery(`#td-chat-${to}`).remove()
+            })
         }
     }
     showUser(client) {
@@ -99,10 +145,15 @@ class TdEvent {
             this.buildUser(data);
             console.log('conecto ', data.user)
         })
-    }
+    }    
     subscribePing() {
         this.onEvent('PING', (data) => {            
             console.log('PING => ', data)
+        })
+    }
+    subscribeChat() {
+        this.onEvent('CHAT', (data) => {            
+            console.log(data)
         })
     }
     getRandomColor() {
