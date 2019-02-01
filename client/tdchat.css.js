@@ -3,6 +3,7 @@ const tdChatCss = (data) => `
         #${data.divUser} {
             text-align:right;  
             padding-right: 25px; 
+            font-family: 'Open Sans', sans-serif;
         }
         #${data.divUser} figure {
             width:30px;
@@ -45,20 +46,22 @@ const tdChatCss = (data) => `
             position:fixed;
             bottom:0;
             right:0;
+            font-family: 'Open Sans', sans-serif;
         }
         #${data.divChat} .td-chat-to {
             width:200px;
-            float:right;
+            vertical-align: bottom;
+            display: inline-block;
             border: 2px solid #1262b3;
-            padding: 0 10px 5px;
+            padding: 0;
             position:relative;            
-            margin: 0 10px;
+            margin: 0 10px 0 0;
             background-color: #FAFAFA;
             border-bottom: 0px;
         }
         #${data.divChat} .td-chat-to .td-chat-header {
-            margin-left: -10px;
-            margin-right: -10px;
+            margin-left: 0px;
+            margin-right: 0px;
             background-color: #1262b3;
             padding: 5px;
             height: 15px;
@@ -67,37 +70,72 @@ const tdChatCss = (data) => `
         #${data.divChat} .td-chat-to .td-chat-header .td-chat-close {
             position:absolute;
             right:5px;
-            top:4px;
+            top:2px;
             color:white;
             cursor:pointer;
         }
         #${data.divChat} .td-chat-to .td-chat-header .td-chat-close svg{
             width: 9px;    
+        }
+        #${data.divChat} .td-chat-to .td-chat-header .td-chat-min-max {
+            position:absolute;
+            right:25px;
+            top:0px;
+            color:white;
+            cursor:pointer;
+        }
+        #${data.divChat} .td-chat-to .td-chat-header .td-chat-min-max svg{
+            width: 10px;    
+        }
+        #${data.divChat} .td-chat-to .td-chat-header .td-chat-min-max svg[data-icon*=minimize] {         
+            position: relative;
+            top: -3px;
         }        
         #${data.divChat} .td-chat-to .td-chat-header h2 {
             position:absolute;
             left:5px;
             top:5px;
             color:white;
-            font-size: 12px;
+            font-size: 10px;
             margin:0;
         }
         #${data.divChat} .td-chat-to .td-chat-area {
-            width:100%;
+            width: calc(100% - 12px);
             height: 190px;
+            margin-bottom: 0px;
+            overflow-y: scroll;
+            padding: 5px 6px 0;
+        }
+        #${data.divChat} .td-chat-to .td-message {
+            width: 140px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 11px;           
+        }
+        #${data.divChat} .td-chat-to .td-message.me {
+            background-color: #e5e5e5;
+        }
+        #${data.divChat} .td-chat-to .td-message.not-me {
+            background-color: white;
+            margin-left: auto;
         }
         #${data.divChat} .td-chat-to .td-chat-input {
-            width: 165px;
-            padding: 4px 8px;
-            padding-right: 25px;           
+            width: 166px;
+            padding: 7px 8px;
+            padding-right: 25px;
+            margin-left: 1px;
+            border: none;
+            margin-bottom: 0px;
+            border-top: 1px solid #f1f1f1;         
         }
         #${data.divChat} .td-chat-to .td-chat-send {
-            position:absolute;
-            bottom: 5px;
-            right: 11px;
+            position: absolute;
+            bottom: 0px;
+            right: 6px;
             color: #0e4e8f;
             transition: .2s color;
-            cursor:pointer;
+            cursor: pointer;
         }
         #${data.divChat} .td-chat-to .td-chat-send:hover {
             color: #1262b3;
@@ -106,6 +144,7 @@ const tdChatCss = (data) => `
             width: 20px;
             height : 20px;
         }
+        
 
     </style>
 `;
