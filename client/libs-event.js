@@ -7,8 +7,7 @@ class TdEvent {
     }
     
     init(domainServer, tdChatConst) {        
-        this.tdChat = tdChatConst;
-        this.buildMain()
+        this.tdChat = tdChatConst;        
         console.log()
         this.config(domainServer+this.tdChat.idCMSPortal, this.tdChat);
         this.addStyles(this.tdChat);
@@ -21,13 +20,7 @@ class TdEvent {
             this.subscribeChat();
         });
 
-    }
-    buildMain() {
-        jQuery('body').append(`
-            <div id="${this.tdChat.divUser}"></div>
-            <div id="${this.tdChat.divChat}"></div>
-        `)
-    }
+    }    
     config(domain, object) {
         console.log(domain)
         this.socket = io(domain, {
@@ -79,12 +72,10 @@ class TdEvent {
         console.log(from, to, user);
         this.buildChat(from, to, user);
     }
-    buildUsers(data) {
+    buildUsers(data) {        
         data.forEach((client, index) => {
-            if (index === 0) {
-                jQuery(`#${client.divUser}`).empty();
-            }
-            this.buildUser(client)
+            if (index === 0) jQuery(`#${client.divUser}`).empty();
+            if (client.idCMSUsuario != this.tdChat.idCMSUsuario) this.buildUser(client)            
         });
     }
     buildUser(client) {
@@ -100,9 +91,8 @@ class TdEvent {
             console.log('Se construyo', client.user)
         }
     }
-    buildChat(from, to, user) {        
-        if (jQuery(`#td-chat-${to}`).length == 0) {
-            console.log(jQuery(`#td-chat-${to}`).length)
+    buildChat(from, to, user) {               
+        if (jQuery(`#td-chat-${to}`).length == 0) {        
             jQuery(`#${this.tdChat.divChat}`).append(`
                 <div class="td-chat-to" id="td-chat-${to}" data-to="${to}">
                     <div class="td-chat-header">
@@ -139,6 +129,12 @@ class TdEvent {
                     jQuery(`#td-chat-${to} .td-chat-body`).show()
                 }
             })
+            if (this.getStore(to) != null) {
+                let messages = this.getStore(to);
+                messages.forEach(item => {
+                    this.appendChat(item.message, to, item.class)
+                })
+            }
         }
     }
     showUser(client) {
@@ -177,10 +173,12 @@ class TdEvent {
                 console.log(data.target, data)
                 this.buildChat(data.to,data.from , data.user);
                 this.appendChat(data.message,data.from, data.target)
+                this.setStore({class: "me", message: data.message}, data.from);
             } else {
                 console.log(data.target, data)
                 this.buildChat(data.from, data.to, data.user);
                 this.appendChat(data.message,data.to, data.target)
+                this.setStore({class: "not-me", message: data.message}, data.to);                
             }
             
         })
@@ -220,13 +218,20 @@ class TdEvent {
         }
         return color;
     }
+    setStore(data, idUsuario) {
+        let store = this.getStore(idUsuario);
+        let limit = 500;
+        if (store == null) store=[];
+        if (store.length >= limit) store.splice(0,store.length - limit + 1 );
+        store.push(data); 
+        sessionStorage.setItem(idUsuario ,JSON.stringify(store));
+    }
+    getStore(idUsuario) {
+        let res = sessionStorage.getItem(idUsuario);
+        return JSON.parse(res);
+    }
 }
 const tdEvent = new TdEvent();
 document.addEventListener('DOMContentLoaded', function () {
     tdEvent.init('http://localhost:3000/', tdChat);
 })
-
-
-
-
-

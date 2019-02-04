@@ -114,11 +114,11 @@ const tdChatCss = (data) => `
             font-size: 11px;           
         }
         #${data.divChat} .td-chat-to .td-message.me {
-            background-color: #e5e5e5;
+            background-color: #e5e5e5;            
+            margin-left: auto;
         }
         #${data.divChat} .td-chat-to .td-message.not-me {
-            background-color: white;
-            margin-left: auto;
+            background-color: white;            
         }
         #${data.divChat} .td-chat-to .td-chat-input {
             width: 166px;
