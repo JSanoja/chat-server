@@ -35,8 +35,8 @@ io.use((socket, next) => {
 });
 // Luego de aceptar el dominio conecto
 
-portalsList.forEach(portal=> {
-  io.of('/'+portal).on('connection', generalSocket => {
+
+  io.of('/161').on('connection', generalSocket => {
     nameSpace = '/' + generalSocket.handshake.query.idCMSPortal;
     let socket = generalSocket;
     console.log('Conexion al nameSpace ' + socket.nsp.name)
@@ -139,7 +139,7 @@ portalsList.forEach(portal=> {
     });
   })
 
-})
+
 
 
 

@@ -157,7 +157,7 @@ class TdEvent {
     }
     subscribeConect() {
         this.onEvent('CONECT', (data) => {
-            this.buildUser(data);
+            if (data.idCMSUsuario != this.tdChat.idCMSUsuario) this.buildUser(data)            
             console.log('conecto ', data.user)
         })
     }    
