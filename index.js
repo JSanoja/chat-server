@@ -5,10 +5,15 @@ var configList = JSON.parse(fs.readFileSync('white-list.json', 'utf8'));
 var whiteList = configList.domain;
 var portalsList = configList.portals;
 
+const express = require('express');
 
+const PORT = process.env.PORT || 3000;
+
+const server = express()
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 // importar librerias del socket y configuracion del servidor
-const server = require('http').createServer();
+// const server = require('http').createServer();
 const io = require('socket.io')(server, { origins: '*:*'});
 io.origins('*:*')
 io.attach(server, {
@@ -141,7 +146,7 @@ portalsList.forEach(portal=> {
 
 
 
-// se levanta el servidor
-server.listen(3000, function () {
-  console.log('listening on *:3000');
-});
+// // se levanta el servidor
+// server.listen(3000, function () {
+//   console.log('listening on *:3000');
+// });
