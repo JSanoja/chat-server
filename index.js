@@ -9,7 +9,8 @@ var portalsList = configList.portals;
 
 // importar librerias del socket y configuracion del servidor
 const server = require('http').createServer();
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, { origins: '*:*'});
+io.origins('*:*')
 io.attach(server, {
   pingInterval: 60000,
   pingTimeout: 5000,
