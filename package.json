@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
     "start-server" :"node index.js",
     "start-client" : "http-server ./client/ ",
     "start-all": "npm-run-all -p start-server start-client"
