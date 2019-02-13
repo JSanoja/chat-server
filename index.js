@@ -13,16 +13,12 @@ const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, 'client/test-main.html');
 
 const server = express()
-  .use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 // importar librerias del socket y configuracion del servidor
 // const server = require('http').createServer();
 const io = require('socket.io')(server, { origins: '*:*'});
+io.set('origins', '*:*');
 io.origins('*:*')
 io.attach(server, {
   pingInterval: 60000,
