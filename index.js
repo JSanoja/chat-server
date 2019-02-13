@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, 'client/test-main.html');
 
 const server = express()
-  use(function(req, res, next) {
+  .use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
