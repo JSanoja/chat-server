@@ -5,7 +5,7 @@ const path = require('path');
 var configList = JSON.parse(fs.readFileSync('white-list.json', 'utf8'));
 var whiteList = configList.domain;
 
-var portalsList = configList.portals-namespaces;
+var portalsList = configList.portals;
 
 const express = require('express');
 

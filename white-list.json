@@ -5,7 +5,7 @@
         "http://127.0.0.1:8080",
         "http://localhost:8080"
     ],
-    "portals-namespaces": [
+    "portals": [
         "/161",
         "/200"
     ]
