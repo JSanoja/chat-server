@@ -17,7 +17,7 @@ const server = express()
 
 // importar librerias del socket y configuracion del servidor
 // const server = require('http').createServer();
-const io = require('socket.io')(server, { origins: '*:*'});
+const io = require('socket.io')(server, { origins: '*:*', wsEngine: 'ws'});
 io.set('origins', '*:*');
 io.origins('*:*')
 io.attach(server, {
