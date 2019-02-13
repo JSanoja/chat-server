@@ -1,15 +1,23 @@
-
+'use strict';
 // Abrir la lista blanca de dominios
 const fs = require('fs');
+const path = require('path');
 var configList = JSON.parse(fs.readFileSync('white-list.json', 'utf8'));
 var whiteList = configList.domain;
+
 var portalsList = configList.portals-namespaces;
 
 const express = require('express');
 
 const PORT = process.env.PORT || 3000;
+const INDEX = path.join(__dirname, 'client/test-main.html');
 
 const server = express()
+  .use((req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.sendFile(INDEX) 
+  })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 // importar librerias del socket y configuracion del servidor
