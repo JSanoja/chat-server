@@ -13,9 +13,12 @@ const PORT = process.env.PORT || 3000;
 const INDEX = path.join(__dirname, 'client/test-main.html');
 
 const server = express()
-  .use((req, res) => {
+  use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  })
+  .use((req, res) => {    
     res.sendFile(INDEX) 
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
