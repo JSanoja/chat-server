@@ -18,9 +18,6 @@ const server = express()
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   })
-  .use((req, res) => {    
-    res.sendFile(INDEX) 
-  })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 // importar librerias del socket y configuracion del servidor
@@ -48,7 +45,7 @@ io.use((socket, next) => {
 
 // portalsList.forEach(portal => {
   io.of('/161').on('connection', generalSocket => {
-    nameSpace = '/' + generalSocket.handshake.query.idCMSPortal;
+    let nameSpace = '/' + generalSocket.handshake.query.idCMSPortal;
     let socket = generalSocket;
     console.log('Conexion al nameSpace ' + socket.nsp.name)
     // Usuario conectado
