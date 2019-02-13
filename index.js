@@ -38,8 +38,8 @@ io.use((socket, next) => {
   }
 });
 // Luego de aceptar el dominio conecto
-
-portalsList.forEach(portal => {
+let portal ="/161";
+// portalsList.forEach(portal => {
   io.of(portal).on('connection', generalSocket => {
     let nameSpace = '/' + generalSocket.handshake.query.idCMSPortal;
     let socket = generalSocket;
@@ -142,7 +142,7 @@ portalsList.forEach(portal => {
       console.log('El cliente de id ' + socket.id + ' se fue del room ' + sub.event)
     });
   })
-})
+// })
 
 
 
