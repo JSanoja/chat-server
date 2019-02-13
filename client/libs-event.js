@@ -233,5 +233,5 @@ class TdEvent {
 }
 const tdEvent = new TdEvent();
 document.addEventListener('DOMContentLoaded', function () {
-    tdEvent.init('ws://td-chat-server.herokuapp.com/', tdChat);
+    tdEvent.init('http://td-chat-server.herokuapp.com/', tdChat);
 })
