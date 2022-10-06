@@ -35,5 +35,5 @@ Node y NPM
 
 ## Authors
 
- JSanoja y GPela para Dos al cubo
+ JSanoja para Dos al cubo
 
